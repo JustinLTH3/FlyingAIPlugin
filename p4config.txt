@@ -1,0 +1,4 @@
+P4PORT=ssl:167.71.142.14:1666
+P4USER=Justin
+P4CLIENT=FA_main_Justin
+P4IGNORE=.p4ignore.txt
