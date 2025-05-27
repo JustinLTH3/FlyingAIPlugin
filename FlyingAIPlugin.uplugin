@@ -16,7 +16,22 @@
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "FlyingAIPlugin",
+			"Name": "FATestSuite",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "FACore",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "FACoreEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		},
+      	{
+			"Name": "FABehaviourTree",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
