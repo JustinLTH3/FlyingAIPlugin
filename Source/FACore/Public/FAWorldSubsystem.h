@@ -8,6 +8,7 @@
 #include "Misc/SpinLock.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "Tasks/Task.h"
+#include "Async/Future.h"
 #include "FAWorldSubsystem.generated.h"
 
 class UFAPathfindingSettings;
@@ -138,12 +139,12 @@ protected:
 	void SetBoundNeighbour(AFABound* Bound0, AFABound* Bound1);
 	UFUNCTION()
 	void RegisterBoundInWorldStartUp();
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "FA|WorldSubsystem")
 	TArray<AFABound*> HPAIndex;
 	UE::FSpinLock csHPAIndex;
 
 	TSubclassOf<class UFAPathfindingAlgo> PathfindingAlgoClass;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "FA|WorldSubsystem")
 	/** The instance used for pathfinding. */
 	UFAPathfindingAlgo* PathfindingAlgo;
 
@@ -211,7 +212,7 @@ public:
 		return GameSystemReady;
 	}
 
-	FQueuedThreadPool* GetThreadPool()
+	class FQueuedThreadPool* GetThreadPool()
 	{
 		UE::TScopeLock Lock(ThreadPoolLock);
 		return ThreadPool;

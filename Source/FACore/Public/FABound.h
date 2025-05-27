@@ -98,7 +98,7 @@ protected:
 	UPROPERTY()
 	//Should not unload in anytime unless new Bound Data Soft is set.
 	UFABoundData* BoundData;
-	UPROPERTY(EditInstanceOnly, meta = (ClampMax = 2))
+	UPROPERTY(EditInstanceOnly, Category = "FA|Bound", meta = (ClampMax = 2))
 	uint8 LOD{0};
 	UPROPERTY()
 	//To access the local hpa node index for instancing by the subsystem.

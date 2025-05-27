@@ -7,6 +7,11 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Vector.h"
 #include "BehaviorTree/Tasks/BTTask_RunEQSQuery.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "AIController.h"
+#include "GameFramework/Pawn.h"
+#include "Async/Async.h"
+#include <VisualLogger/VisualLogger.h>
 #include "HLSLTree/HLSLTreeTypes.h"
 
 DEFINE_LOG_CATEGORY(LogFABT);

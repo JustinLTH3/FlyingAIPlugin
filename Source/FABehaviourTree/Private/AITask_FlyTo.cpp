@@ -7,6 +7,8 @@
 #include "GameplayTasksComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/Character.h"
+#include "TimerManager.h"
+#include "Async/Async.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "VisualLogger/VisualLogger.h"
 
