@@ -31,7 +31,8 @@ public:
 
 	TSharedPtr<FStreamableHandle> GetNodeData();
 
-	TObjectPtr<UDataTable> GetNodesData()
+	UFUNCTION(BlueprintCallable, Category = "FA|Bound")
+	UDataTable* GetNodesData()
 	{
 		UE::TScopeLock Lock(NodesDataLock);
 		return NodesData;
