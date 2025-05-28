@@ -45,3 +45,33 @@ bool FANodeSubdivisionTest::RunTest(const FString& Parameters)
 
 	return true;
 }
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FAAABBOverlapTest, "FlyingAIPlugin.FAUnitTest.AABBOverlapTest",
+                                 EAutomationTestFlags::EditorContext | EAutomationTestFlags::
+                                 EngineFilter)
+
+bool FAAABBOverlapTest::RunTest(const FString& Parameters)
+{
+	FVector P1 = FVector(0, 0, 0);
+	FVector P2 = FVector(100, 0, 0);
+	FVector H1 = FVector(100);
+	FVector H2 = FVector(100);
+	TestTrue(TEXT("Normal Case"),UFAWorldSubsystem::AABBOverlap(P1, P2, H1, H2));
+	TestTrue(TEXT("Normal Case"),UFAWorldSubsystem::AABBOverlap(P2, P1, H2, H1));
+	P1.X = -100;
+	TestTrue(TEXT("Touch edge"),UFAWorldSubsystem::AABBOverlap(P1, P2, H1, H2));
+	TestTrue(TEXT("Touch edge"),UFAWorldSubsystem::AABBOverlap(P2, P1, H2, H1));
+	P1.X = -101;
+	TestFalse(TEXT("No Overlap"),UFAWorldSubsystem::AABBOverlap(P1, P2, H1, H2));
+	TestFalse(TEXT("No Overlap"),UFAWorldSubsystem::AABBOverlap(P2, P1, H2, H1));
+	P1.X = -100;
+	P1.Y = -100;
+	P1.Z = -100;
+	P2.X = 100;
+	P2.Y = 100;
+	P2.Z = 100;
+	TestTrue(TEXT("Touching Corner"),UFAWorldSubsystem::AABBOverlap(P1, P2, H1, H2));
+	TestTrue(TEXT("Touching Corner"),UFAWorldSubsystem::AABBOverlap(P2, P1, H2, H1));
+
+	return true;
+}

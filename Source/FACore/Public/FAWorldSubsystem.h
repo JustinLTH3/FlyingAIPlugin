@@ -99,7 +99,6 @@ struct FFANewNodeChildType
 	FName ChildrenName[8];
 };
 
-DECLARE_MULTICAST_DELEGATE(FFAOnBackToMainThread)
 DECLARE_MULTICAST_DELEGATE(FFAOnSystemReady)
 
 namespace FA
@@ -218,6 +217,9 @@ public:
 		return ThreadPool;
 	}
 
+	UFUNCTION(BlueprintCallable, Category = "FA|WorldSubsystem")
+	static bool AABBOverlap(FVector P1, FVector P2, FVector H1, FVector H2);
+
 protected:
 	UFUNCTION()
 	FFAHPAPath InternalCreateHPAPath(FVector StartLocation, FVector EndLocation,
@@ -240,5 +242,4 @@ protected:
 	UFAPathfindingSettings* Settings;
 	FQueuedThreadPool* ThreadPool = nullptr;
 	UE::FSpinLock ThreadPoolLock;
-	static bool AABBOverlap(FVector P1, FVector P2, FVector H1, FVector H2);
 };

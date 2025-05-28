@@ -3,6 +3,7 @@
 #include <AITask_FlyTo.h>
 
 #include "AIController.h"
+#include "BTTask_FALocationQuery.h"
 #include "FAWorldSubsystem.h"
 #include "GameplayTasksComponent.h"
 #include "Engine/World.h"
@@ -148,6 +149,24 @@ void UAITask_FlyTo::AddNextPath(const FFAFinePath& NextPath, FNavPathSharedPtr I
 	InPath->DoneUpdating(ENavPathUpdateType::NavigationChanged);
 	const auto system = GetWorld()->GetSubsystem<UFAWorldSubsystem>();
 	bIsStillAdjustingPath = true;
+#if ENABLE_VISUAL_LOG
+	for (auto i = 0; i < NextPath.ControlPoints.Num(); i++)
+	{
+		UE_VLOG_LOCATION(this, LogFABT, Display, NextPath.ControlPoints[i], 1,
+		                 FColor::Blue, TEXT("%d"), i);
+	}
+	for (auto i = 0; i < NextPath.InterpolatedPoints.Num(); i++)
+	{
+		UE_VLOG_LOCATION(this, LogFABT, Display, NextPath.InterpolatedPoints[i], 1,
+		                 FColor::Yellow, TEXT("%d"), i);
+	}
+	for (auto node : NextPath.Nodes)
+	{
+		UE_VLOG_BOX(this, LogFABT, Display,
+		            FBox(node.NodeData.Position-node.NodeData.HalfExtent,node. NodeData.Position+
+			            node.NodeData. HalfExtent ), FColor::Green, TEXT("Path"));
+	}
+#endif
 	GenTask = UE::Tasks::Launch(UE_SOURCE_LOCATION, [this, NextPath, system, InPath]
 	{
 		auto finePath = system->CreateNextFinePath(NextPath, ColliderSize,

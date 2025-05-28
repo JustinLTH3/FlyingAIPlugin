@@ -9,7 +9,7 @@ public class FACore : ModuleRules
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
-                "Core", "Settings"
+                "Core", "DeveloperSettings"
             }
         );
 

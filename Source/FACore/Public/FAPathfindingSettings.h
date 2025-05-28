@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "FAPathfindingAlgo.h"
+#include "Runtime/DeveloperSettings/Public/Engine/DeveloperSettings.h"
 #include "Engine/StaticMeshActor.h"
 #include "UObject/Object.h"
 #include "FAPathfindingSettings.generated.h"
@@ -20,12 +21,13 @@ struct FFAMapSettings
 	bool bUseLocationQuery;
 };
 
-UCLASS(DefaultConfig= "FAPathfindingSettings", config = Project, meta = (DisplayName = "Pathfinding Settings", ConfigExtension = "FAPathfindingSettings"))
-class FACORE_API UFAPathfindingSettings : public UObject
+UCLASS(DefaultConfig, config = FACore)
+class FACORE_API UFAPathfindingSettings : public UDeveloperSettings
 {
 	GENERATED_BODY()
 
 public:
+	UFAPathfindingSettings();
 	UPROPERTY(Config, EditAnywhere, Category = "Pathfinding")
 	TSubclassOf<UFAPathfindingAlgo> PathfindingAlgorithmToUse = UFAPathfindingAlgo::StaticClass();
 	UPROPERTY(Config, EditAnywhere, Category = "Pathfinding")

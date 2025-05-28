@@ -120,7 +120,7 @@ void UBTTask_FALocationQuery::InitializeFromAsset(UBehaviorTree& Asset)
 	}
 	else
 	{
-		UE_LOG(LogBehaviorTree, Warning,
+		UE_LOG(LogFABT, Warning,
 		       TEXT(
 			       "Can't initialize task: %s, make sure that behavior tree specifies blackboard asset!"
 		       ), *GetName());

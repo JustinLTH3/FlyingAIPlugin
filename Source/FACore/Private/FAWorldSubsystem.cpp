@@ -88,8 +88,8 @@ void UFAWorldSubsystem::BeginDestroy()
 	if (ThreadPool) delete ThreadPool;
 	for (auto Data : NeighboursData)
 	{
-		if (UGameplayStatics::DoesSaveGameExist(Data.Key, 0))
-			UGameplayStatics::DeleteGameInSlot(Data.Key, 0);
+		if (UGameplayStatics::DoesSaveGameExist(Data.Key, 0)) UGameplayStatics::DeleteGameInSlot(
+			Data.Key, 0);
 	}
 	Super::BeginDestroy();
 }
@@ -216,10 +216,10 @@ void UFAWorldSubsystem::SetHPAIndex(UDataTable* CombinedNodes, UDataTable* DataT
 				if (AABBOverlap(r0->Position, r1->Position, r0->HalfExtent, r1->HalfExtent))
 				{
 					UE::TScopeLock SL(Lock);
-					if (auto d = DataTable->FindRow<FFaNodeData>(RowMap[x].Key, "", false))
-						d->Neighbour.AddUnique(RowMap[y].Key);
-					if (auto d = DataTable->FindRow<FFaNodeData>(RowMap[y].Key, "", false))
-						d->Neighbour.AddUnique(RowMap[x].Key);
+					if (auto d = DataTable->FindRow<FFaNodeData>(RowMap[x].Key, "", false)) d->
+						Neighbour.AddUnique(RowMap[y].Key);
+					if (auto d = DataTable->FindRow<FFaNodeData>(RowMap[y].Key, "", false)) d->
+						Neighbour.AddUnique(RowMap[x].Key);
 				}
 			}
 		}));
@@ -434,7 +434,9 @@ void UFAWorldSubsystem::RegisterBoundInWorldStartUp()
 		{
 			UE::TScopeLock Lock(OnSystemReadyLock);
 			GameSystemReady = true;
+#ifdef  CONNECT_WITH_VLOG
 			UE_VLOG(this, LogFAWorldSubsystem, Display, TEXT("GameSystemReady"));
+#endif
 			OnSystemReady.Broadcast();
 		});
 	}, SetHPATasks));
@@ -671,31 +673,13 @@ void UFAWorldSubsystem::InterpolateFinePath(FFAFinePath& InFinePath)
 			t += FMath::Clamp(70 / dist, 0, 0.9);
 		}
 	}
-#if ENABLE_VISUAL_LOG
-	for (auto i = 0; i < InFinePath.ControlPoints.Num(); i++)
-	{
-		UE_VLOG_LOCATION(this, LogFAWorldSubsystem, Display, InFinePath.ControlPoints[i], 1,
-		                 FColor::Blue, TEXT("%d"), i);
-	}
-	for (auto i = 0; i < InFinePath.InterpolatedPoints.Num(); i++)
-	{
-		UE_VLOG_LOCATION(this, LogFAWorldSubsystem, Display, InFinePath.InterpolatedPoints[i], 1,
-		                 FColor::Yellow, TEXT("%d"), i);
-	}
-	for (auto node : InFinePath.Nodes)
-	{
-		UE_VLOG_BOX(this, LogTemp, Display,
-		            FBox(node.NodeData.Position-node.NodeData.HalfExtent,node. NodeData.Position+
-			            node.NodeData. HalfExtent ), FColor::Green, TEXT("Path"));
-	}
-#endif
 }
 
 FFAPathNodeData UFAWorldSubsystem::PointToNodeInBound(FVector Point, AFABound* Bound)
 {
 	FVector BoundPosition = Bound->GetActorLocation();
-	if (!UKismetMathLibrary::IsPointInBox(Point, BoundPosition, Bound->GetHalfExtent()))
-		return FFAPathNodeData();
+	if (!UKismetMathLibrary::IsPointInBox(Point, BoundPosition, Bound->GetHalfExtent())) return
+		FFAPathNodeData();
 	//Bound is not loaded.
 	if (!Bound->GetNodesData()) return FFAPathNodeData();;
 	FFaNodeData* RData = nullptr;
