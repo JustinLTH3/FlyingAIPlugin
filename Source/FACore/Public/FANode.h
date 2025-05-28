@@ -11,17 +11,17 @@ USTRUCT(BlueprintType)
 struct FFaNodeData : public FTableRowBase
 {
 	GENERATED_BODY()
-	UPROPERTY(VisibleAnywhere, Category = "FA|NodeData")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FA|NodeData")
 	FVector Position;
-	UPROPERTY(VisibleAnywhere, Category = "FA|NodeData")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FA|NodeData")
 	FVector HalfExtent;
-	UPROPERTY(VisibleAnywhere, Category = "FA|NodeData")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FA|NodeData")
 	TArray<FName> Neighbour;
 	UPROPERTY(VisibleAnywhere, Category = "FA|NodeData")
 	uint32 Depth;
 	UPROPERTY(VisibleAnywhere, Category = "FA|NodeData")
 	uint32 HPANodeIndex = -1;
-	UPROPERTY(VisibleAnywhere, Category = "FA|NodeData")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FA|NodeData")
 	bool IsTraversable = false;
 
 	bool operator==(const FFaNodeData& other) const
