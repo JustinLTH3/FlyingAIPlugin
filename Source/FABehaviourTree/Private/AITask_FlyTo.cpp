@@ -95,7 +95,7 @@ bool UAITask_FlyTo::AdjustInitialPath(UPathFollowingComponent* PFComp)
 				Path->DoneUpdating(ENavPathUpdateType::NavigationChanged);
 				if (IsFinished())
 				{
-					UE_VLOG(GetGameplayTasksComponent(), LogFAAITask, Error,
+					UE_VLOG(OwnerController, LogFAAITask, Error,
 					        TEXT("%s> re-Activating Finished task!"), *GetName());
 				}
 				break;
@@ -152,17 +152,17 @@ void UAITask_FlyTo::AddNextPath(const FFAFinePath& NextPath, FNavPathSharedPtr I
 #if ENABLE_VISUAL_LOG
 	for (auto i = 0; i < NextPath.ControlPoints.Num(); i++)
 	{
-		UE_VLOG_LOCATION(this, LogFABT, Display, NextPath.ControlPoints[i], 1,
+		UE_VLOG_LOCATION(OwnerController, LogFAAITask, Display, NextPath.ControlPoints[i], 1,
 		                 FColor::Blue, TEXT("%d"), i);
 	}
 	for (auto i = 0; i < NextPath.InterpolatedPoints.Num(); i++)
 	{
-		UE_VLOG_LOCATION(this, LogFABT, Display, NextPath.InterpolatedPoints[i], 1,
+		UE_VLOG_LOCATION(OwnerController, LogFAAITask, Display, NextPath.InterpolatedPoints[i], 1,
 		                 FColor::Yellow, TEXT("%d"), i);
 	}
 	for (auto node : NextPath.Nodes)
 	{
-		UE_VLOG_BOX(this, LogFABT, Display,
+		UE_VLOG_BOX(OwnerController, LogFAAITask, Display,
 		            FBox(node.NodeData.Position-node.NodeData.HalfExtent,node. NodeData.Position+
 			            node.NodeData. HalfExtent ), FColor::Green, TEXT("Path"));
 	}

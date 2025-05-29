@@ -104,10 +104,10 @@ DECLARE_MULTICAST_DELEGATE(FFAOnSystemReady)
 namespace FA
 {
 	static __readonly TArray<uint8> XPositiveChildrenIndex{1, 3, 5, 7};
-	static __readonly TArray<uint8> XNegativeChildrenIndex{2, 3, 6, 7};
-	static __readonly TArray<uint8> YPositiveChildrenIndex{4, 5, 6, 7};
-	static __readonly TArray<uint8> YNegativeChildrenIndex{0, 2, 4, 6};
-	static __readonly TArray<uint8> ZPositiveChildrenIndex{0, 1, 4, 5};
+	static __readonly TArray<uint8> YPositiveChildrenIndex{2, 3, 6, 7};
+	static __readonly TArray<uint8> ZPositiveChildrenIndex{4, 5, 6, 7};
+	static __readonly TArray<uint8> XNegativeChildrenIndex{0, 2, 4, 6};
+	static __readonly TArray<uint8> YNegativeChildrenIndex{0, 1, 4, 5};
 	static __readonly TArray<uint8> ZNegativeChildrenIndex{0, 1, 2, 3};
 }
 

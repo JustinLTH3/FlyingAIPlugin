@@ -101,6 +101,7 @@ uint32 FFANodeGenRunnable::Run()
 			}
 			delete Locks[i];
 		}
+		UE_LOG(LogFAWorldSubsystem, Display, TEXT("Finish Generate Nodes"));
 	}
 	{
 		FScopedEvent Event;
@@ -147,6 +148,7 @@ uint32 FFANodeGenRunnable::Run()
 		{
 			FPlatformProcess::ConditionalSleep([&Results, i] { return Results[i].IsReady(); });
 		}
+		UE_LOG(LogFAWorldSubsystem, Display, TEXT("Finish Setting HPA Index"));
 	}
 	{
 		FScopedEvent Event;
@@ -233,6 +235,7 @@ uint32 FFANodeGenRunnable::Run()
 			}
 		}
 		UE::Tasks::BusyWait(Tasks);
+		UE_LOG(LogFAWorldSubsystem, Display, TEXT("Finish Generating HPA Connection Graph"));
 	}
 	{
 		FScopedEvent Event;

@@ -38,7 +38,7 @@ EBTNodeResult::Type UBTTask_FALocationQuery::ExecuteTask(UBehaviorTreeComponent&
 	AActor* QueryOwner = OwnerComp.GetOwner();
 	AController* ControllerOwner = Cast<AController>(QueryOwner);
 
-	if (Memory->Location.IsValid()) return EBTNodeResult::InProgress;
+	if (!GetWorld()->GetSubsystem<UFAWorldSubsystem>())return EBTNodeResult::Failed;
 	TUniqueFunction<void()> Callback = [this, ControllerOwner]
 	{
 		AsyncTask(ENamedThreads::GameThread, [this, ControllerOwner]
@@ -62,7 +62,7 @@ EBTNodeResult::Type UBTTask_FALocationQuery::ExecuteTask(UBehaviorTreeComponent&
 			{
 				MyComp->GetBlackboardComponent()->SetValue<UBlackboardKeyType_Vector>(
 					BlackboardKey.GetSelectedKeyID(), mem->Location.Get());
-				UE_VLOG_LOCATION(this, LogFABT, Display, mem->Location.Get(), 0.1f, FColor::Red,
+				UE_VLOG_LOCATION(ControllerOwner, LogFABT, Display, mem->Location.Get(), 0.1f, FColor::Red,
 				                 TEXT("Location Query"));
 				mem->Location.Reset();
 				FinishLatentTask(*MyComp, EBTNodeResult::Succeeded);
@@ -88,7 +88,7 @@ EBTNodeResult::Type UBTTask_FALocationQuery::ExecuteTask(UBehaviorTreeComponent&
 			return EBTNodeResult::Failed;
 		OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Vector>(
 			BlackboardKey.GetSelectedKeyID(), Memory->Location.Get());
-		UE_VLOG_LOCATION(this, LogFABT, Display, Memory->Location.Get(), 0.1f, FColor::Red,
+		UE_VLOG_LOCATION(ControllerOwner, LogFABT, Display, Memory->Location.Get(), 0.1f, FColor::Red,
 		                 TEXT("Location Query"));
 		return EBTNodeResult::Succeeded;
 	}

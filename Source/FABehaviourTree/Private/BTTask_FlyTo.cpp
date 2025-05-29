@@ -20,6 +20,7 @@ UBTTask_FlyTo::UBTTask_FlyTo(const FObjectInitializer& ObjectInitializer)
 	bRequireNavigableEndLocation = false;
 	bProjectGoalLocation = false;
 	bUsePathfinding = false;
+	ColliderSizeKey.AddVectorFilter(this, GET_MEMBER_NAME_CHECKED(UBTTask_FlyTo, ColliderSizeKey));
 }
 
 EBTNodeResult::Type UBTTask_FlyTo::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
