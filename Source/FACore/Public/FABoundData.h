@@ -12,7 +12,7 @@ class UCompositeDataTable;
 /**
  *
  */
-UCLASS()
+UCLASS(BlueprintType)
 class FACORE_API UFABoundData : public UDataAsset
 {
 	GENERATED_BODY()
@@ -27,7 +27,7 @@ public:
 	TMap<uint32, FFAConnectedHPANode> InternalHPAConnection;
 	UPROPERTY(VisibleAnywhere, Category = "FA|BoundData")
 	TArray<uint32> ContainingHPANodes;
-	UPROPERTY(VisibleAnywhere, Category = "FA|BoundData")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FA|BoundData")
 	FVector GeneratePosition;
 	UPROPERTY(VisibleAnywhere, Category = "FA|BoundData")
 	uint32 MaxDepth;
