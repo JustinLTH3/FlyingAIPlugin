@@ -20,6 +20,8 @@ UBTTask_FALocationQuery::UBTTask_FALocationQuery(const FObjectInitializer& Objec
 	: Super(ObjectInitializer)
 {
 	NodeName = "Run Location Query";
+	ColliderSizeKey.AddVectorFilter(
+		this, GET_MEMBER_NAME_CHECKED(UBTTask_FALocationQuery, ColliderSizeKey));
 }
 
 EBTNodeResult::Type UBTTask_FALocationQuery::ExecuteTask(UBehaviorTreeComponent& OwnerComp,
@@ -29,16 +31,18 @@ EBTNodeResult::Type UBTTask_FALocationQuery::ExecuteTask(UBehaviorTreeComponent&
 		return EBTNodeResult::Failed;
 	FBT_FALocationQueryTaskMemory* Memory = CastInstanceNodeMemory<
 		FBT_FALocationQueryTaskMemory>(NodeMemory);
-	FVector ColliderSize = ColliderSizeKey.SelectedKeyType ==
-	                       UBlackboardKeyType_Vector::StaticClass()
-		                       ? OwnerComp.GetBlackboardComponent()->GetValue<
-			                       UBlackboardKeyType_Vector>(ColliderSizeKey.GetSelectedKeyID())
-		                       : FVector::ZeroVector;
+	auto bb = OwnerComp.GetBlackboardComponent();
+	FVector ColliderSize = bb->GetValue<UBlackboardKeyType_Vector>(
+		ColliderSizeKey.GetSelectedKeyID());
+	ColliderSize = ColliderSize == UBlackboardKeyType_Vector::InvalidValue
+					   ? FVector::ZeroVector
+					   : ColliderSize;
+
 
 	AActor* QueryOwner = OwnerComp.GetOwner();
 	AController* ControllerOwner = Cast<AController>(QueryOwner);
 
-	if (!GetWorld()->GetSubsystem<UFAWorldSubsystem>())return EBTNodeResult::Failed;
+	if (!GetWorld()->GetSubsystem<UFAWorldSubsystem>()) return EBTNodeResult::Failed;
 	TUniqueFunction<void()> Callback = [this, ControllerOwner]
 	{
 		AsyncTask(ENamedThreads::GameThread, [this, ControllerOwner]
@@ -62,8 +66,8 @@ EBTNodeResult::Type UBTTask_FALocationQuery::ExecuteTask(UBehaviorTreeComponent&
 			{
 				MyComp->GetBlackboardComponent()->SetValue<UBlackboardKeyType_Vector>(
 					BlackboardKey.GetSelectedKeyID(), mem->Location.Get());
-				UE_VLOG_LOCATION(ControllerOwner, LogFABT, Display, mem->Location.Get(), 0.1f, FColor::Red,
-				                 TEXT("Location Query"));
+				UE_VLOG_LOCATION(ControllerOwner, LogFABT, Display, mem->Location.Get(), 0.1f,
+				                 FColor::Red, TEXT("Location Query"));
 				mem->Location.Reset();
 				FinishLatentTask(*MyComp, EBTNodeResult::Succeeded);
 			}
@@ -88,8 +92,8 @@ EBTNodeResult::Type UBTTask_FALocationQuery::ExecuteTask(UBehaviorTreeComponent&
 			return EBTNodeResult::Failed;
 		OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Vector>(
 			BlackboardKey.GetSelectedKeyID(), Memory->Location.Get());
-		UE_VLOG_LOCATION(ControllerOwner, LogFABT, Display, Memory->Location.Get(), 0.1f, FColor::Red,
-		                 TEXT("Location Query"));
+		UE_VLOG_LOCATION(ControllerOwner, LogFABT, Display, Memory->Location.Get(), 0.1f,
+		                 FColor::Red, TEXT("Location Query"));
 		return EBTNodeResult::Succeeded;
 	}
 

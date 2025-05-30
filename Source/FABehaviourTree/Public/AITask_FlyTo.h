@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "FAWorldSubsystem.h"
+#include "BehaviorTree/Blackboard/BlackboardKeyType_Vector.h"
 #include "Tasks/AITask_MoveTo.h"
 #include "AITask_FlyTo.generated.h"
 
@@ -20,7 +21,12 @@ class FABEHAVIOURTREE_API UAITask_FlyTo : public UAITask_MoveTo
 public:
 	UAITask_FlyTo(const FObjectInitializer& ObjectInitializer);
 
-	void SetColliderSize(const FVector& InColliderSize) { ColliderSize = InColliderSize; };
+	void SetColliderSize(const FVector& InColliderSize)
+	{
+		ColliderSize = InColliderSize == UBlackboardKeyType_Vector::InvalidValue
+			               ? FVector::ZeroVector
+			               : InColliderSize;
+	};
 
 protected:
 	virtual void PerformMove() override;
@@ -32,5 +38,4 @@ protected:
 	FVector ColliderSize;
 	bool bIsStillAdjustingPath = false;
 	FTimerHandle PathFinishDelegateHandle;
-
 };
