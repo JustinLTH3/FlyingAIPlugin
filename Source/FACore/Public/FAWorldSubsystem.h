@@ -130,6 +130,9 @@ public:
 	static void Subdivide(TSharedPtr<FFaNodeData> Node, FFANewNodeChildType& Children);
 
 	virtual void BeginDestroy() override;
+	/**
+	 * @brief Register Bound to the system to use it in the world.
+	 */
 	UFUNCTION(BlueprintCallable, Category = "FA|WorldSubsystem")
 	void RegisterBoundInWorld(AFABound* Bound);
 
@@ -140,28 +143,26 @@ protected:
 	void RegisterBoundInWorldStartUp();
 	UPROPERTY(BlueprintReadOnly, Category = "FA|WorldSubsystem")
 	TArray<AFABound*> HPAIndex;
-	UE::FSpinLock csHPAIndex;
 
 	TSubclassOf<class UFAPathfindingAlgo> PathfindingAlgoClass;
-	UPROPERTY(BlueprintReadOnly, Category = "FA|WorldSubsystem")
 	/** The instance used for pathfinding. */
+	UPROPERTY(BlueprintReadOnly, Category = "FA|WorldSubsystem")
 	UFAPathfindingAlgo* PathfindingAlgo;
-
 	TArray<UE::Tasks::FTask> SetHPATasks;
 	UPROPERTY()
 	TArray<AActor*> ActorsToIgnore;
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "FA|WorldSubsystem")
 	//Both points have to be in LOD 0, 1 bounds which have nodesData loaded.
-	FFAHPAPath CreateHPAPath(const FVector& StartLocation, const FVector& EndLocation);
 	UFUNCTION(BlueprintCallable, Category = "FA|WorldSubsystem")
+	FFAHPAPath CreateHPAPath(const FVector& StartLocation, const FVector& EndLocation);
 	//Blocks thread and may cause short-freeze. Intended to not run on game thread.
+	UFUNCTION(BlueprintCallable, Category = "FA|WorldSubsystem")
 	FFAFinePath CreateNextFinePath(const FFAFinePath& InFinePath,
 	                               const FVector& ColliderSize = FVector::ZeroVector,
 	                               const FVector& ColliderOffset = FVector::ZeroVector);
-	UFUNCTION(BlueprintCallable, Category = "FA|WorldSubsystem")
 	//Blocks thread and may cause short-freeze. Intended to not run on game thread.
+	UFUNCTION(BlueprintCallable, Category = "FA|WorldSubsystem")
 	FFAFinePath CreateFinePathByHPA(FFAHPAPath HPAPath, FVector ColliderSize = FVector::ZeroVector,
 	                                const FVector& ColliderOffset = FVector::ZeroVector);
 
@@ -218,6 +219,9 @@ public:
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "FA|WorldSubsystem")
+	/**
+	 * @brief Include touch.
+	 */
 	static bool AABBOverlap(FVector P1, FVector P2, FVector H1, FVector H2);
 
 protected:
@@ -226,20 +230,29 @@ protected:
 	                                 TArray<AFABound*> Bounds);
 	UPROPERTY()
 	TArray<AFABound*> RegisteredBound;
+	/*!< Bounds that are registered for using pathfinding. Call \c RegisterBoundInWorld to register bound that is spawned dynamically.*/
+
+	/** Critical section for accessing Registered Bound */
 	FCriticalSection RegisteredBoundLock;
 	UPROPERTY()
 	TMap<uint32, FFAConnectedHPANode> HPAConnection;
 	FCriticalSection HPAConnectionLock;
 	UPROPERTY()
 	TMap<FString, TWeakObjectPtr<UFANeighbourData>> NeighboursData;
-	UE::FSpinLock NeighboursDataLock;
-	UPROPERTY()
-	//Is the Subsystem ready for use in game.
-	bool GameSystemReady = false;
+
+	/** Call when the system is fully initialized and ready for use in game. */
 	FFAOnSystemReady OnSystemReady;
-	UE::FSpinLock OnSystemReadyLock;
+
 	UPROPERTY()
 	UFAPathfindingSettings* Settings;
 	FQueuedThreadPool* ThreadPool = nullptr;
+	UPROPERTY()
+	//Is the Subsystem ready for use in game.
+	bool GameSystemReady = false;
+	/** Lock for accessing \c OnSystemReady and \c GameSystemReady */
+	UE::FSpinLock OnSystemReadyLock;
 	UE::FSpinLock ThreadPoolLock;
+	/** Lock for accessing \c NeighboursData . */
+	UE::FSpinLock NeighboursDataLock;
+	UE::FSpinLock csHPAIndex;
 };
